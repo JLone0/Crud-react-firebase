@@ -1,24 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
+import {UserContext} from "./context/UserProvider"
+
+
+import Home from "./routes/Home";
+import Products from "./routes/Products";
+import Provider from "./routes/Provider";
+import NotFound from "./routes/NotFound";
+import Login from "./routes/Login";
+import Register from "./routes/Register";
+
+import Navbar from "./components/Navbar";
+import RequireAuth from "./components/RequireAuth";
+
 
 function App() {
+
+  const { user } = useContext(UserContext);
+
+  if (user === false) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div>
+        <Navbar />
+      </div>
+      <hr />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }
+        />
+        <Route path="/products" element={<Products />} />
+        <Route path="/provider" element={<Provider />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+      </Routes>
+    </>
   );
 }
 
